@@ -1,9 +1,9 @@
-# Cloudflare Feedback Dashboard
+# FeedbackOps
 
-A comprehensive feedback management platform built on Cloudflare Workers, D1, and Workers AI. This dashboard helps product teams collect, analyze, and act on user feedback from multiple sources.
+A comprehensive feedback management platform built on Cloudflare Workers, D1, and Workers AI. FeedbackOps helps product teams collect, analyze, and act on user feedback from multiple sources with AI-powered insights and automated reporting.
 
 **Built for**: Cloudflare Product Manager Assignment  
-**Repository**: [swindar-zhou/cloudflare-pm-oa](https://github.com/swindar-zhou/cloudflare-pm-oa)
+**Repository**: [swindar-zhou/FeedbackOps](https://github.com/swindar-zhou/FeedbackOps)
 
 ## 🚀 Features
 
@@ -20,6 +20,7 @@ A comprehensive feedback management platform built on Cloudflare Workers, D1, an
 - **Integration Management**: View connected sources and feedback counts per source
 - **Filtering & Search**: Filter feedback by theme, urgency, sentiment, and source
 - **Detailed Feedback View**: Modal popup with full content, metadata, and AI suggestions
+- **Engineering Bug Reports**: Generate formatted, prioritized bug reports ready to send to engineering teams
 
 ## 🛠️ Tech Stack
 
@@ -127,6 +128,11 @@ CREATE TABLE daily_digest (
 - `GET /api/integrations/:source/feedback` - Get feedback from a specific source
 - `GET /api/digest` - Get latest daily digest
 
+### Bug Reports
+- `GET /api/bug-report` - Generate aggregated bug report message for engineering team
+  - Query params: `?min_urgency=4` (minimum urgency), `?limit=20` (max items)
+  - Returns formatted message, summary stats, and bugs grouped by theme
+
 ### Database Management
 - `POST /api/seed` - Seed database with sample feedback
 
@@ -137,6 +143,7 @@ CREATE TABLE daily_digest (
 - **Feedback Type Distribution**: Visual bars with urgent% and negative% per type
 - **Theme Breakdown**: Ranked, clickable list showing total count, change, and urgent items
 - **Connected Integrations**: Cards showing source status and feedback counts
+- **Engineering Bug Report**: Generate formatted bug reports grouped by theme with prioritized issues
 
 ### Feedback Table
 - Sortable by urgency (highest first)
@@ -153,6 +160,17 @@ CREATE TABLE daily_digest (
   - Reasoning explanations
   - Priority and category badges
 
+### Engineering Bug Report
+- **One-Click Generation**: Generate prioritized bug reports instantly
+- **Theme-Based Organization**: Bugs automatically grouped by product theme
+- **Summary Statistics**: Quick overview of critical, high-priority, and confirmed bugs
+- **Formatted Messages**: Ready-to-send messages with:
+  - Executive summary with counts
+  - Detailed breakdown by theme
+  - Individual bug details with urgency indicators
+  - Action items and next steps
+- **Copy to Clipboard**: One-click copy for easy sharing via Slack, email, or project management tools
+
 ## 🤖 AI Features
 
 ### Automatic Analysis
@@ -166,6 +184,15 @@ CREATE TABLE daily_digest (
 - **Reasoning**: Brief explanation of why the suggestion was made
 - **Categorization**: Immediate, product, bug, documentation, communication, follow-up
 
+### Bug Report Generation
+- **Prioritized Aggregation**: Automatically groups high-urgency bugs and negative feedback
+- **Theme-Based Organization**: Bugs organized by product theme for easy triage
+- **Formatted Messages**: Ready-to-send messages for engineering teams with:
+  - Summary statistics (critical, high priority, confirmed bugs)
+  - Detailed breakdown by theme
+  - Action items and next steps
+  - One-click copy to clipboard
+
 ## 📅 Scheduled Tasks
 
 Daily digest generation runs at 9 AM UTC via Cron Trigger:
@@ -175,10 +202,11 @@ Daily digest generation runs at 9 AM UTC via Cron Trigger:
 
 ## 🎯 Use Cases
 
-- **Product Management**: Track feature requests and user sentiment
+- **Product Management**: Track feature requests, user sentiment, and generate prioritized bug reports for engineering
 - **Support Teams**: Identify urgent issues and prioritize responses
-- **Engineering**: Monitor bug reports and technical feedback
-- **Community Management**: Aggregate feedback from multiple channels
+- **Engineering**: Receive formatted bug reports with prioritized issues grouped by theme
+- **Community Management**: Aggregate feedback from multiple channels (Email, GitHub, Discord, LinkedIn, Cloudflare)
+- **Cross-Functional Collaboration**: Share actionable insights between PM, Engineering, and Support teams
 
 ## 🔧 Configuration
 
@@ -219,7 +247,8 @@ cloudflare/
 │       ├── analysis.ts      # Analysis & suggestions handlers
 │       ├── summary.ts       # Summary, digest, and scheduled tasks
 │       ├── integrations.ts  # Integration management handlers
-│       └── seed.ts          # Database seeding handler
+│       ├── seed.ts          # Database seeding handler
+│       └── bug-report.ts    # Engineering bug report generation
 ├── public/
 │   ├── index.html           # Dashboard UI
 │   ├── styles.css           # Styling
@@ -243,6 +272,7 @@ The codebase is organized into modular files for better maintainability:
   - `summary.ts`: Dashboard summary, daily digest, and scheduled tasks
   - `integrations.ts`: Integration management and source-specific feedback
   - `seed.ts`: Database seeding with sample data
+  - `bug-report.ts`: Engineering bug report generation and aggregation
 
 ## 🚀 Deployment
 
@@ -275,6 +305,11 @@ wrangler deploy
 - Seed the database: Click "Seed Database with Sample Feedback"
 - Check API endpoints are accessible
 - Verify CORS headers are set correctly
+
+### Bug Report Not Generating
+- Ensure there are feedback items with urgency >= 4, type='bug', or sentiment='negative'
+- Check browser console for API errors
+- Verify the endpoint is accessible: `GET /api/bug-report`
 
 ## 🏗️ Architecture
 

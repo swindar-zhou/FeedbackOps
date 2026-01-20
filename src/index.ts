@@ -14,6 +14,7 @@ import { handleGetSummary, handleGetDigest, generateDailyDigest } from "./handle
 import { handleAnalyzeFeedback, handleGetSuggestions, handleAnalyzeAll } from "./handlers/analysis";
 import { handleGetIntegrations, handleGetIntegrationFeedback } from "./handlers/integrations";
 import { handleSeedDatabase } from "./handlers/seed";
+import { handleGetBugReport } from "./handlers/bug-report";
 
 export type { Env };
 
@@ -72,6 +73,9 @@ export default {
 			}
 			if (url.pathname === "/api/seed" && request.method === "POST") {
 				return withCors(await handleSeedDatabase(request, env as Env));
+			}
+			if (url.pathname === "/api/bug-report" && request.method === "GET") {
+				return withCors(await handleGetBugReport(request, env as Env));
 			}
 
 			// Keep your old demo routes if you want

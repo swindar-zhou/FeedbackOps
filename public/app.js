@@ -487,6 +487,91 @@ function clearThemeFilter() {
 	}
 }
 
+// Generate bug report for engineering team
+async function generateBugReport() {
+	const button = document.getElementById('bugReportButton');
+	const container = document.getElementById('bugReportContainer');
+	const messageEl = document.getElementById('bugReportMessage');
+	const summaryEl = document.getElementById('bugReportSummary');
+	const copyButton = document.getElementById('copyBugReportButton');
+	
+	try {
+		button.disabled = true;
+		button.textContent = 'Generating...';
+
+		const response = await fetch(`${API_BASE}/api/bug-report?min_urgency=4&limit=20`);
+		const data = await response.json();
+		
+		if (data.ok) {
+			if (data.total === 0) {
+				showSeedMessage('No prioritized bugs found.', 'info');
+				button.disabled = false;
+				button.textContent = 'Generate Bug Report';
+				return;
+			}
+
+			// Display formatted message
+			messageEl.textContent = data.formatted_message;
+			container.style.display = 'block';
+			copyButton.style.display = 'inline-block';
+
+			// Display summary
+			const summary = data.summary;
+			summaryEl.innerHTML = `
+				<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px;">
+					<div style="padding: 12px; background: #fee2e2; border-radius: 8px; text-align: center;">
+						<div style="font-size: 24px; font-weight: 700; color: #dc2626;">${summary.critical}</div>
+						<div style="font-size: 12px; color: #991b1b;">Critical Issues</div>
+					</div>
+					<div style="padding: 12px; background: #fef3c7; border-radius: 8px; text-align: center;">
+						<div style="font-size: 24px; font-weight: 700; color: #d97706;">${summary.high}</div>
+						<div style="font-size: 12px; color: #92400e;">High Priority</div>
+					</div>
+					<div style="padding: 12px; background: #dbeafe; border-radius: 8px; text-align: center;">
+						<div style="font-size: 24px; font-weight: 700; color: #2563eb;">${summary.bugs}</div>
+						<div style="font-size: 12px; color: #1e40af;">Confirmed Bugs</div>
+					</div>
+					<div style="padding: 12px; background: #f3f4f6; border-radius: 8px; text-align: center;">
+						<div style="font-size: 24px; font-weight: 700; color: #374151;">${summary.negative}</div>
+						<div style="font-size: 12px; color: #4b5563;">Negative Sentiment</div>
+					</div>
+				</div>
+			`;
+
+			showSeedMessage(`Generated bug report with ${data.total} prioritized items.`, 'success');
+		} else {
+			showSeedMessage(data.error || 'Failed to generate bug report', 'error');
+		}
+
+		button.disabled = false;
+		button.textContent = 'Generate Bug Report';
+	} catch (error) {
+		console.error('Error generating bug report:', error);
+		showSeedMessage('Error generating bug report. Please try again.', 'error');
+		button.disabled = false;
+		button.textContent = 'Generate Bug Report';
+	}
+}
+
+// Copy bug report to clipboard
+async function copyBugReport() {
+	const messageEl = document.getElementById('bugReportMessage');
+	if (!messageEl) return;
+
+	try {
+		await navigator.clipboard.writeText(messageEl.textContent);
+		showSeedMessage('Bug report copied to clipboard!', 'success');
+	} catch (error) {
+		console.error('Error copying to clipboard:', error);
+		// Fallback: select text
+		const range = document.createRange();
+		range.selectNode(messageEl);
+		window.getSelection()?.removeAllRanges();
+		window.getSelection()?.addRange(range);
+		showSeedMessage('Text selected. Press Ctrl+C to copy.', 'info');
+	}
+}
+
 // Seed database
 async function seedDatabase() {
 	const button = document.getElementById('seedButton');
