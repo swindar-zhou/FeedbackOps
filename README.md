@@ -5,6 +5,28 @@ A comprehensive feedback management platform built on Cloudflare Workers, D1, an
 **Built for**: Cloudflare Product Manager Assignment  
 **Repository**: [swindar-zhou/FeedbackOps](https://github.com/swindar-zhou/FeedbackOps)
 
+## 📹 Demo Video
+
+> **Note**: For the best viewing experience, watch the video on Google Drive. The embed below works on most markdown renderers, but GitHub may show a link instead.
+
+<div align="center">
+
+[![FeedbackOps Demo Video](https://img.youtube.com/vi/placeholder/0.jpg)](https://drive.google.com/file/d/1m-Jt8rlyocL6EgP2juVA8IwCMhktHFAU/view?usp=sharing)
+
+<iframe 
+  src="https://drive.google.com/file/d/1m-Jt8rlyocL6EgP2juVA8IwCMhktHFAU/preview?autoplay=1" 
+  width="800" 
+  height="450" 
+  frameborder="0" 
+  allow="autoplay; encrypted-media; fullscreen" 
+  allowfullscreen
+  style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); margin: 20px 0;">
+</iframe>
+
+**[▶️ Watch Demo Video on Google Drive](https://drive.google.com/file/d/1m-Jt8rlyocL6EgP2juVA8IwCMhktHFAU/view?usp=sharing)**
+
+</div>
+
 ## 🚀 Features
 
 ### Core Functionality
